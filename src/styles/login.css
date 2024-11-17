@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap');
 /* General styles */
+
+.formal-font {
+  font-family: "Charm", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #e9edf1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,108 +20,122 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+  color: #333;
 }
 
+/* Container styles */
 .login-container {
   width: 100%;
-  max-width: 600px; /* Increased size */
-  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
-  padding: 40px; /* Increased padding */
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px); /* Apply blur effect */
-  -webkit-backdrop-filter: blur(8px); /* For Safari */
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.55); /* Subtle transparency */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  text-align: center;
 }
 
+/* Heading styles */
 .login-container h2 {
-  text-align: center;
-  margin-bottom: 30px; /* Increased space between title and form */
-  font-size: 28px; /* Increased font size */
-  color: #333;
+  font-size: 40px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #fd9023;
 }
 
 /* Form styles */
 .form-group {
-  margin-bottom: 20px; /* Increased margin between form fields */
+  margin-bottom: 25px;
+  text-align: left;
 }
 
 .form-group label {
+  font-weight: 500;
+  margin-bottom: 10px;
   display: block;
-  font-weight: bold;
-  margin-bottom: 8px; /* Increased space between label and input */
-  font-size: 16px; /* Increased font size */
+  font-size: 18px;
   color: #555;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px; /* Increased padding */
-  font-size: 16px; /* Increased font size */
-  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ddd;
   border-radius: 5px;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
   box-sizing: border-box;
 }
 
 .form-group input:focus {
+  border-color: #fd9023;
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
 /* Button styles */
 .login-button {
   width: 100%;
-  padding: 15px; /* Increased padding */
-  font-size: 18px; /* Increased font size */
-  background-color: #007bff;
-  color: #fff;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #cf6700;
+  color: white;
   border: none;
   border-radius: 5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px #532900;
 }
 
 .login-button:hover {
-  background-color: #0056b3;
+  background-color: #fb7c00;
+  box-shadow: 0 6px 15px #532900;
 }
 
-/* Responsive design */
+/* Responsive styles */
 @media screen and (max-width: 768px) {
   .login-container {
-    padding: 30px; /* Adjusted padding for smaller screens */
+    padding: 30px;
   }
 
   .login-container h2 {
-    font-size: 24px; /* Adjusted font size */
+    font-size: 26px;
   }
 
   .form-group input {
-    padding: 10px; /* Adjusted padding for smaller screens */
-    font-size: 14px; /* Adjusted font size */
+    font-size: 14px;
   }
 
   .login-button {
-    padding: 12px; /* Adjusted padding */
-    font-size: 16px; /* Adjusted font size */
+    font-size: 14px;
   }
 }
 
 @media screen and (max-width: 480px) {
   .login-container {
-    padding: 20px; /* Adjusted padding */
+    padding: 20px;
   }
 
   .login-container h2 {
-    font-size: 20px; /* Adjusted font size */
+    font-size: 22px;
   }
 
   .form-group input {
-    padding: 8px; /* Adjusted padding */
-    font-size: 14px; /* Adjusted font size */
+    font-size: 13px;
   }
 
   .login-button {
-    padding: 12px; /* Adjusted padding */
-    font-size: 14px; /* Adjusted font size */
+    font-size: 13px;
+    padding: 10px;
   }
+}
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: left;
 }

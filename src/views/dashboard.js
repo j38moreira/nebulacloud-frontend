@@ -1,106 +1,142 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../styles/dashboard.css';
 
 function Dashboard() {
     const [folders, setFolders] = useState([]);
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
-    const [currentPath, setCurrentPath] = useState(''); // Start with an empty path
+    const [currentPath, setCurrentPath] = useState('');
+    const [loading, setLoading] = useState(false);  // Track loading state
     const navigate = useNavigate();
+    const [selectedFile, setSelectedFile] = useState(null);
 
-    // Fetch folders and files when component mounts or currentPath changes
     useEffect(() => {
-        console.log('Current Path:', currentPath); // Debugging line
         const token = localStorage.getItem('access_token');
         if (!token) {
             navigate('/login');
         } else {
-            fetchContents(token, currentPath);  // Fetch contents at the current path
+            fetchContents(token, currentPath);
         }
-    }, [navigate, currentPath]);  // Only run when currentPath changes
+    }, [navigate, currentPath]);
+
+    useEffect(() => {
+        // Clear folders and files whenever the path changes
+        setFolders([]);
+        setFiles([]);
+    }, [currentPath]);  // Effect will run every time currentPath changes
 
     const fetchContents = async (token, path) => {
-        console.log('Fetching contents for path:', path);  // Log the current path to ensure it's correct
+        setLoading(true);  // Set loading to true before fetching
         try {
             const response = await axios.get('http://127.0.0.1:5000/list', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                params: {
-                    path: path,  // Send the current path as a query parameter
-                },
+                headers: { Authorization: `Bearer ${token}` },
+                params: { path },
             });
 
             if (response.status === 200) {
-                console.log('Fetched contents:', response.data); // Log the fetched data to debug
-                // Check if the response has folders and files
-                if (response.data.folders && response.data.files) {
-                    setFolders(response.data.folders);  // Update the folders state
-                    setFiles(response.data.files);  // Update the files state
-                    setErrorMessage(''); // Clear any previous error messages
-                } else {
-                    setErrorMessage('No folders or files found in this folder.');
-                }
+                setFolders(response.data.folders);
+                setFiles(response.data.files);
+                setErrorMessage('');
             } else {
-                setErrorMessage('Failed to fetch contents. Please try again later.');
+                setErrorMessage('Failed to fetch contents.');
             }
         } catch (error) {
-            console.error('Error fetching contents:', error);
-            setErrorMessage('Error occurred while fetching contents.');
+            setErrorMessage('Error fetching contents.');
+        } finally {
+            setLoading(false);  // Set loading to false after fetching
         }
     };
 
     const handleFolderClick = (folderName) => {
-        const newPath = `${currentPath ? currentPath + '/' : ''}${folderName}`;  // Append folder name to the current path
-        console.log('Folder clicked, new path:', newPath); // Debugging line
-        setCurrentPath(newPath);  // Update the path to the clicked folder
+        // Update the currentPath, which triggers the useEffect to clear state
+        const newPath = `${currentPath ? currentPath + '/' : ''}${folderName}`;
+        setCurrentPath(newPath); // Update the current path to include the selected folder
     };
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
+
+    const handleFileUpload = async () => {
+        if (selectedFile) {
+            const token = localStorage.getItem('access_token');
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('path', currentPath);
+
+            try {
+                const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                if (response.status === 200) {
+                    setFiles([...files, selectedFile.name]);
+                    setSelectedFile(null); // Reset file input
+                    alert('File uploaded successfully!');
+                }
+            } catch (error) {
+                alert('Error uploading file.');
+            }
+        } else {
+            alert('Please select a file to upload.');
+        }
+    };
 
     return (
         <div className="dashboard-container">
+            {/* Banner with menu */}
+            <div className="dashboard-banner">
+                <h1>Dashboard</h1>
+                <div className="menu">
+                    <button className="create-folder-button">Create Folder</button>
+                    <button className="upload-button" onClick={handleFileUpload}>Upload File</button>
+                    <button className="logout-button">Logout</button>
+                </div>
+            </div>
+
+            {/* Error message */}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-            {/* Container for Folders and Files */}
-            <div className="content-container">
-                {/* Folders and Files in a horizontal row */}
-                <div className="folders-files-row">
-                    {/* Folders Section */}
-                    <div className="folders-section">
-                        <div className="folder-list">
-                            {folders.length > 0 ? (
-                                folders.map((folder, index) => (
-                                    <div
-                                        key={index}
-                                        className="folder-item"
-                                        onClick={() => handleFolderClick(folder)}  // Handle click to navigate
-                                    >
-                                        <span role="img" aria-label="folder">📁</span>  {/* Display folder emoji */}
-                                        <h4>{folder}</h4>  {/* Display each folder name */}
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No folders found.</p>
-                            )}
-                        </div>
-                    </div>
+            {/* File upload input */}
+            <input
+                type="file"
+                className="file-input"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+            />
 
-                    {/* Files Section */}
-                    <div className="files-section">
-                        <div className="file-list">
-                            {files.length > 0 ? (
-                                files.map((file, index) => (
-                                    <div key={index} className="file-item">
-                                        <h4>{file}</h4>  {/* Display each file name */}
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No files found.</p>
-                            )}
-                        </div>
-                    </div>
-                </div>
+            {/* Content container for folders and files */}
+            <div className="content-container">
+                {/* Loading state */}
+                {loading ? (
+                    <p>Loading...</p> // Show loading text while fetching
+                ) : (
+                    <>
+                        {/* Render Folders */}
+                        {folders.map((folder, index) => (
+                            <div key={index} className="grid-item folder-item" onClick={() => handleFolderClick(folder)}>
+                                <span role="img" aria-label="folder">📁</span>
+                                <h4>{folder}</h4>
+                            </div>
+                        ))}
+
+                        {/* Render Files */}
+                        {files.map((file, index) => (
+                            <div key={index} className="grid-item file-item">
+                                <span role="img" aria-label="file">📄</span>
+                                <h4>{file}</h4>
+                            </div>
+                        ))}
+                    </>
+                )}
             </div>
         </div>
     );

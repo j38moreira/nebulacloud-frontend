@@ -8,18 +8,17 @@ function Dashboard() {
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [currentPath, setCurrentPath] = useState('');
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
+    const [pathHistory, setPathHistory] = useState([]); // Track navigation history
     const [selectedFile, setSelectedFile] = useState(null);
-    const [loading, setLoading] = useState(false);  // Track loading state
     const [username, setUsername] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const storedUsername = localStorage.getItem('username');  // Retrieve the username from localStorage
+        const storedUsername = localStorage.getItem('username'); // Retrieve username
         if (storedUsername) {
-            setUsername(storedUsername);  // Set the username to display
+            setUsername(storedUsername); // Display username
         } else {
-            navigate('/login');  // Redirect to login if no username is found (i.e., not logged in)
+            navigate('/login'); // Redirect if not logged in
         }
 
         const token = localStorage.getItem('access_token');
@@ -28,14 +27,17 @@ function Dashboard() {
         } else {
             fetchContents(token, currentPath);
         }
-    }, [navigate, currentPath]);
+    }, [currentPath, navigate]);
 
     const fetchContents = async (token, path) => {
         try {
-            const response = await axios.get('http://127.0.0.1:5000/list', {
-                headers: { Authorization: `Bearer ${token}` },
-                params: { path },
-            });
+            const response = await axios.post(
+                'http://127.0.0.1:5000/list',
+                { path }, // Include path in the body
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
 
             if (response.status === 200) {
                 setFolders(response.data.folders);
@@ -50,8 +52,17 @@ function Dashboard() {
     };
 
     const handleFolderClick = (folderName) => {
-        const newPath = `${currentPath ? currentPath + '/' : ''}${folderName}`;
+        const newPath = `${currentPath ? `${currentPath}/` : ''}${folderName}`;
+        setPathHistory([...pathHistory, currentPath]); // Save current path in history
         setCurrentPath(newPath);
+    };
+
+    const handleGoBack = () => {
+        if (pathHistory.length > 0) {
+            const lastPath = pathHistory.pop(); // Get the last path
+            setPathHistory([...pathHistory]); // Update history
+            setCurrentPath(lastPath || ''); // Go back to the last path
+        }
     };
 
     const handleFileChange = (event) => {
@@ -77,7 +88,6 @@ function Dashboard() {
                 });
 
                 if (response.status === 200) {
-                    // Re-fetch the folder contents to show the new file
                     fetchContents(token, currentPath);
                     setSelectedFile(null);
                     alert('File uploaded successfully!');
@@ -90,60 +100,54 @@ function Dashboard() {
         }
     };
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
+    const handleLogout = () => {
+        localStorage.removeItem('access_token'); // Clear access token
+        navigate('/login'); // Redirect to login page
     };
 
     return (
         <div className="dashboard-container">
-            {/* Banner with menu */}
+            {/* Banner */}
             <div className="dashboard-banner">
-                <h1>Nebula Cloud - Bem Vindo, {username}!</h1>
+                <h1>Nebula Cloud - Welcome, {username}!</h1>
                 <div className="menu">
-                <button className="create-folder-button">Create Folder</button>
+                    <button className="create-folder-button">Create Folder</button>
                     <button className="upload-button" onClick={handleFileUpload}>Upload File</button>
-                    <button className="logout-button">Logout</button>
+                    <button className="logout-button" onClick={handleLogout}>Logout</button>
                 </div>
             </div>
 
-            {/* Error message */}
+            {/* Error Message */}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-            {/* Container for Folders and Files */}
-            {/* File upload input */}
-            <input
-                type="file"
-                className="file-input"
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-            />
+            {/* Navigation Controls */}
+            <div className="navigation-controls">
+                <button className="go-back-button" onClick={handleGoBack} disabled={pathHistory.length === 0}>
+                    Go Back
+                </button>
+                <p className="current-path">Current Path: {currentPath || 'Root'}</p>
+            </div>
 
-            {/* Content container for folders and files */}
+            {/* Content */}
             <div className="content-container">
-                {/* Loading state */}
-                {loading ? (
-                    <p>Loading...</p> // Show loading text while fetching
-                ) : (
-                    <>
-                        {/* Render Folders */}
-                        {folders.map((folder, index) => (
-                            <div key={index} className="grid-item folder-item" onClick={() => handleFolderClick(folder)}>
-                                <span role="img" aria-label="folder">📁</span>
-                                <h4>{folder}</h4>
-                            </div>
-                        ))}
+                {/* Render Folders */}
+                {folders.map((folder, index) => (
+                    <div key={index} className="grid-item folder-item" onClick={() => handleFolderClick(folder)}>
+                        <span role="img" aria-label="folder">📁</span>
+                        <h4>{folder}</h4>
+                    </div>
+                ))}
 
-                        {/* Render Files */}
-                        {files.map((file, index) => (
-                            <div key={index} className="grid-item file-item">
-                                <span role="img" aria-label="file">📄</span>
-                                <h4>{file}</h4>
-                            </div>
-                        ))}
-                    </>
-                )}
+                {/* Render Files */}
+                {files.map((file, index) => (
+                    <div key={index} className="grid-item file-item">
+                        <span role="img" aria-label="file">📄</span>
+                        <h4>{file}</h4>
+                    </div>
+                ))}
             </div>
         </div>
     );
 }
+
 export default Dashboard;

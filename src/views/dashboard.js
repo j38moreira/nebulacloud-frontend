@@ -11,10 +11,12 @@ function Dashboard() {
     const [pathHistory, setPathHistory] = useState([]); // Track navigation history
     const [selectedFile, setSelectedFile] = useState(null);
     const [username, setUsername] = useState('');
+    const [newFolderName, setNewFolderName] = useState('');
+    const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedUsername = localStorage.getItem('username'); // Retrieve username
+        const storedUsername = localStorage.getItem('username');
         if (storedUsername) {
             setUsername(storedUsername); // Display username
         } else {
@@ -33,7 +35,7 @@ function Dashboard() {
         try {
             const response = await axios.post(
                 'http://127.0.0.1:5000/list',
-                { path }, // Include path in the body
+                { path },
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -59,7 +61,7 @@ function Dashboard() {
 
     const handleGoBack = () => {
         if (pathHistory.length > 0) {
-            const lastPath = pathHistory.pop(); // Get the last path
+            const lastPath = pathHistory.pop();
             setPathHistory([...pathHistory]); // Update history
             setCurrentPath(lastPath || ''); // Go back to the last path
         }
@@ -105,15 +107,49 @@ function Dashboard() {
         navigate('/login'); // Redirect to login page
     };
 
+    const handleCreateFolder = async () => {
+        const token = localStorage.getItem('access_token');
+        const folderData = {
+            path: currentPath,
+            folder_name: newFolderName,
+        };
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/create_folder', folderData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.status === 201) {
+                setNewFolderName(''); // Clear the input after success
+                setShowPopup(false); // Close the popup
+                fetchContents(token, currentPath); // Refresh the folder list
+                alert('Folder created successfully!');
+            } else {
+                alert('Error creating folder.');
+            }
+        } catch (error) {
+            alert('Error creating folder.');
+        }
+    };
+
     return (
         <div className="dashboard-container">
             {/* Banner */}
             <div className="dashboard-banner">
                 <h1>Nebula Cloud - Welcome, {username}!</h1>
                 <div className="menu">
-                    <button className="create-folder-button">Create Folder</button>
-                    <button className="upload-button" onClick={handleFileUpload}>Upload File</button>
-                    <button className="logout-button" onClick={handleLogout}>Logout</button>
+                    <button className="create-folder-button" onClick={() => setShowPopup(true)}>
+                        Create Folder
+                    </button>
+                    <button className="upload-button" onClick={handleFileUpload}>
+                        Upload File
+                    </button>
+                    <button className="logout-button" onClick={handleLogout}>
+                        Logout
+                    </button>
                 </div>
             </div>
 
@@ -146,6 +182,23 @@ function Dashboard() {
                     </div>
                 ))}
             </div>
+
+            {/* Create Folder Popup */}
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup">
+                        <h2>Create a New Folder</h2>
+                        <input
+                            type="text"
+                            placeholder="Enter folder name"
+                            value={newFolderName}
+                            onChange={(e) => setNewFolderName(e.target.value)}
+                        />
+                        <button onClick={handleCreateFolder}>Create</button>
+                        <button onClick={() => setShowPopup(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

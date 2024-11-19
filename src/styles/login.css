@@ -1,136 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;700&display=swap');
-/* General styles */
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Crimson Pro', serif;
-  background-color: #001D00;
+/* styles/login.css */
+.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  color: #d1d1d1;
+  height: 100vh; /* Full viewport height */
+  background-color: #f4f4f9; /* Light background color */
 }
 
-/* Container styles */
-.login-container {
-  width: 100%;
-  max-width: 500px;
-  background: #1a1a1a; /* Slytherin green with transparency */
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  text-align: center;
-}
-
-/* Heading styles */
-.login-container h2 {
-  font-size: 40px;
-  margin-bottom: 20px;
-  font-weight: 700;
-  color: #c0c0c0; /* Silver */
-}
-
-/* Form styles */
 .form-group {
-  margin-bottom: 25px;
-  text-align: left;
+  margin-bottom: 15px;
 }
 
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 10px;
-  display: block;
-  font-size: 18px;
-  color: #d1d1d1;
-}
-
-.form-group input {
+form {
+  background-color: white; /* White background for the form */
+  padding: 30px;
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
   width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #4a7c59;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  background-color: #262626;
-  color: #d1d1d1;
-  box-sizing: border-box;
+  max-width: 400px; /* Max width of the form */
+  display: flex;
+  flex-direction: column;
 }
 
-.form-group input:focus {
-  border-color: #5fa27c; /* Brighter green for focus */
-  background-color: #303030;
-  box-shadow: 0 0 8px rgba(95, 162, 124, 0.6);
+h2 {
+  text-align: center;
+  margin-bottom: 20px; /* Space between heading and form elements */
+  font-size: 2em;
+  color: #333; /* Dark text for the title */
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Rounded corners for input fields */
+  font-size: 1em;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #007bff; /* Change border color on focus */
   outline: none;
 }
 
-/* Button styles */
-.login-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  background-color: #3b7a57; /* Dark Slytherin green */
+button {
+  padding: 10px;
+  background-color: #007bff; /* Blue background */
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 700;
+  border-radius: 8px; /* Rounded corners */
+  font-size: 1em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  transition: background-color 0.3s ease;
 }
 
-.login-button:hover {
-  background-color: #4e9a74; /* Lighter green on hover */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+button:disabled {
+  background-color: #ccc; /* Disabled button background */
+  cursor: not-allowed;
 }
 
-/* Responsive styles */
-@media screen and (max-width: 768px) {
-  .login-container {
-    padding: 30px;
-  }
-
-  .login-container h2 {
-    font-size: 28px;
-  }
-
-  .form-group input {
-    font-size: 14px;
-  }
-
-  .login-button {
-    font-size: 16px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .login-container {
-    padding: 20px;
-  }
-
-  .login-container h2 {
-    font-size: 22px;
-  }
-
-  .form-group input {
-    font-size: 13px;
-  }
-
-  .login-button {
-    font-size: 14px;
-    padding: 10px;
-  }
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
 .error-message {
-  color: #ff4d4d; /* Bright red for errors */
-  font-size: 14px;
+  color: red;
+  text-align: center;
+  font-size: 0.9em;
   margin-top: 10px;
-  text-align: left;
 }

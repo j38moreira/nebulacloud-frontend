@@ -64,9 +64,9 @@ html, body {
 .content-container {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Dynamic layout */
-    gap: 20px;
-    padding: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Smaller containers */
+    gap: 15px; /* Slightly tighter spacing */
+    padding: 15px; /* Reduce padding around the grid */
     overflow-y: auto;
     background-color: #fff; /* Clean white background */
 }
@@ -75,29 +75,36 @@ html, body {
 .grid-item {
     background-color: #f9f9f9; /* Slightly off-white */
     border: 1px solid #ddd; /* Subtle border */
-    border-radius: 8px;
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border-radius: 6px; /* Slightly smaller radius */
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 20px; /* Reduced padding inside each item */
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
+    height: 100px; /* Reduced height */
 }
 
 .grid-item:hover {
-    transform: translateY(-5px); /* Lift on hover */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* More prominent shadow */
+    transform: translateY(-3px); /* Slightly smaller lift on hover */
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
 .grid-item h4 {
-    font-size: 16px;
-    margin-top: 10px;
+    font-size: 14px; /* Smaller text size */
+    margin-top: 5px; /* Reduced margin above the text */
     color: #333;
+    white-space: nowrap; /* Prevent text wrapping for long names */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflowed text */
 }
 
 .grid-item-icon {
-    font-size: 40px;
+    font-size: 24px; /* Smaller icon size */
     color: #0073e6; /* Match banner color */
+    margin-bottom: 5px; /* Add some space below the icon */
 }
+
+
 
 /* Scrollbar Style */
 .content-container::-webkit-scrollbar {

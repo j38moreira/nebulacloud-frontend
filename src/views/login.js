@@ -35,6 +35,7 @@ function Login() {
 
                         // Store the access token in localStorage (or sessionStorage)
                         localStorage.setItem('access_token', access_token);
+                        localStorage.setItem('username', username);
 
                         // Redirect to dashboard
                         navigate('/dashboard'); // This will navigate to the dashboard route
@@ -59,8 +60,8 @@ function Login() {
 
     return (
         <div className="login-container">
-            <h2 className="formal-font">Nebula Cloud</h2>
             <form onSubmit={handleLogin}>
+                <h2 className="formal-font">Nebula Cloud</h2> {/* This heading is now above the inputs */}
                 <div className="form-group">
                     <label className="formal-font" htmlFor="username">Username</label>
                     <input

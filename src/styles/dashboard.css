@@ -1,135 +1,161 @@
-/* Dashboard container */
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light gray background */
+    color: #333; /* Neutral text color */
+    /* Remove overflow:hidden to allow full page use */
+}
+
+/* Dashboard Container */
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    background-color: #1a1a1a;
-    color: #d1d1d1;
-    font-family: 'Crimson Pro', serif;
-    padding: 10px;
+    height: 100vh; /* Ensure it fills the screen height */
+    width: 100%;
+    /* Remove overflow:hidden */
 }
 
-/* Banner with menu */
+/* Header / Menu Bar */
 .dashboard-banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2a2a2a;
-    padding: 10px 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    padding: 15px 20px;
+    background-color: #0073e6; /* Vibrant blue for the banner */
+    color: #fff; /* White text for contrast */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-banner h1 {
-    color: #a9d1a9;
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: bold;
     margin: 0;
 }
 
 .menu {
     display: flex;
-    gap: 10px;
+    gap: 15px;
 }
 
-.create-folder-button,
-.upload-button,
-.logout-button {
-    background-color: #558b2f;
+.menu-button {
+    padding: 8px 12px;
+    background-color: #005bb5; /* Darker blue for buttons */
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px 15px;
     cursor: pointer;
+    font-size: 14px;
     transition: background-color 0.3s ease;
 }
 
-.create-folder-button:hover,
-.upload-button:hover,
-.logout-button:hover {
-    background-color: #33691e;
+.menu-button:hover {
+    background-color: #004080; /* Subtle hover effect */
 }
 
-/* File upload button hidden */
-.file-input {
-    display: none;
-}
-
-/* Error message */
-.error-message {
-    color: #ff4d4d;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Content container */
+/* Grid Layout for Content */
 .content-container {
+    flex: 1;
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Default to 3 items per row for mobile */
-    gap: 15px;
-    padding: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Dynamic layout */
+    gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff; /* Clean white background */
 }
 
-/* Grid item common styles */
+/* Grid Items (Files and Folders) */
 .grid-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(34, 51, 34, 0.8);
+    background-color: #f9f9f9; /* Slightly off-white */
+    border: 1px solid #ddd; /* Subtle border */
     border-radius: 8px;
-    padding: 15px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s ease-in-out;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
-    height: 120px; /* Adjusted height for more space inside */
 }
 
 .grid-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
-}
-
-.icon-container svg {
-    fill: #d1d1d1;
-    width: 48px; /* Adjusted icon size */
-    height: 48px; /* Adjusted icon size */
-    margin-bottom: 10px;
+    transform: translateY(-5px); /* Lift on hover */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* More prominent shadow */
 }
 
 .grid-item h4 {
-    margin: 5px 0 0;
     font-size: 16px;
-    color: #a9d1a9;
-    text-align: center;
+    margin-top: 10px;
+    color: #333;
 }
 
-/* Folder specific styles */
-.folder-item h4 {
-    color: #a9d1a9;
+.grid-item-icon {
+    font-size: 40px;
+    color: #0073e6; /* Match banner color */
 }
 
-/* File specific styles */
-.file-item h4 {
-    color: #d1cfc9;
+/* Scrollbar Style */
+.content-container::-webkit-scrollbar {
+    width: 8px;
 }
 
-/* Responsive adjustments for larger screens */
-@media (min-width: 600px) {
+.content-container::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+}
+
+.content-container::-webkit-scrollbar-thumb:hover {
+    background-color: #b3b3b3;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    /* Tablet to small laptop screens */
     .content-container {
-        grid-template-columns: repeat(4, 1fr); /* Show 4 items per row for medium screens */
+        padding: 15px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Show 3-4 items per row */
+    }
+
+    .menu {
+        flex-direction: row;
     }
 
     .grid-item {
-        height: 150px;
+        padding: 15px;
     }
 }
 
-@media (min-width: 900px) {
-    .content-container {
-        grid-template-columns: repeat(6, 1fr); /* Show 6 items per row for larger screens */
+@media (max-width: 768px) {
+    /* Small tablet and landscape mobile */
+    .menu {
+        flex-direction: column;
+        gap: 10px;
     }
 
     .grid-item {
-        height: 180px;
+        padding: 15px;
+    }
+
+    .content-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 2-3 items per row */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Mobile devices */
+    .dashboard-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .content-container {
+        padding: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 2-3 items per row */
     }
 }

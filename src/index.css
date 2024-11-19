@@ -11,3 +11,62 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Content container that wraps the folders and files in a row */
+.content-container {
+  display: flex;
+  flex-direction: column;  /* Stack folders and files vertically (one below the other) */
+  gap: 20px;
+}
+
+.folders-files-row {
+  display: flex;  /* Use Flexbox for horizontal layout */
+  gap: 20px;  /* Add some space between folders and files sections */
+  flex-wrap: wrap;  /* Allow the items to wrap to the next line if space is tight */
+}
+
+.folders-section, .files-section {
+  flex: 1;  /* Make both sections flexible and take up equal space */
+}
+
+.folder-list {
+  display: flex;  /* This makes all the folder items appear in a row */
+  gap: 10px;  /* Space between folder items */
+  flex-wrap: wrap;  /* Allow wrapping if needed */
+}
+
+.folder-item {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 150px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Align emoji and text vertically */
+  justify-content: center;  /* Center content vertically */
+}
+
+.folder-item span {
+  font-size: 24px;  /* Size of the folder emoji */
+}
+
+.folder-item h4 {
+  margin: 0;
+  font-size: 16px;  /* Adjust the font size for the folder name */
+}
+
+.folder-item:hover {
+  background-color: #e0e0e0;
+}
+
+/* Add responsive design for smaller screens */
+@media (max-width: 768px) {
+  .folders-files-row {
+    flex-direction: column;  /* Stack the folders and files vertically on smaller screens */
+  }
+}
+
+

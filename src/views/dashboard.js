@@ -9,7 +9,6 @@ function Dashboard() {
     const [errorMessage, setErrorMessage] = useState('');
     const [currentPath, setCurrentPath] = useState('');
     const [pathHistory, setPathHistory] = useState([]); // Track navigation history
-    const [selectedFile, setSelectedFile] = useState(null);
     const [username, setUsername] = useState('');
     const [newFolderName, setNewFolderName] = useState('');
     const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
@@ -71,42 +70,44 @@ function Dashboard() {
         }
     };
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setSelectedFile(file);
+
+    const handleFileChange = async (event) => {
+        const files = Array.from(event.target.files); // Convert FileList to array
+
+        if (files.length === 0) {
+            alert('No files selected.');
+            return;
+        }
+
+        const token = localStorage.getItem('access_token');
+        const formData = new FormData();
+
+        files.forEach((file) => {
+            formData.append('file', file); // Add each file to FormData
+        });
+        formData.append('path', currentPath);
+
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.status === 201) {
+                alert('Files uploaded successfully!');
+                fetchContents(token, currentPath); // Refresh file list
+            } else {
+                alert('Error uploading files.');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Error uploading files.');
         }
     };
 
-    const handleFileUpload = async () => {
-        if (selectedFile) {
-            const token = localStorage.getItem('access_token');
-            const formData = new FormData();
-            formData.append('file', selectedFile);
-            formData.append('path', currentPath);
-    
-            try {
-                const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-    
-                if (response.status === 200) {
-                    fetchContents(token, currentPath);
-                    setSelectedFile(null);
-                    alert('File uploaded successfully!');
-                }
-            } catch (error) {
-                console.error(error);  // Add console log for error handling
-                alert('Error uploading file.');
-            }
-        } else {
-            alert('Please select a file to upload.');
-        }
-    };
-    
+
     const handleLogout = () => {
         localStorage.removeItem('access_token'); // Clear access token
         navigate('/login'); // Redirect to login page
@@ -211,6 +212,7 @@ function Dashboard() {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
+    
 
     return (
         <div className="dashboard-container">
@@ -225,13 +227,18 @@ function Dashboard() {
                         <input
                             type="file"
                             id="fileInput"
-                            onChange={handleFileChange}
-                            style={{ display: 'none' }} // Hide the input for better UI experience
+                            multiple
+                            onChange={handleFileChange} // Automatically upload after selecting files
+                            style={{display: 'none'}}
                         />
-                        <button className="upload-button" onClick={() => document.getElementById('fileInput').click()}>
-                            Upload File
+                        <button
+                            className="upload-button"
+                            onClick={() => document.getElementById('fileInput').click()} // Trigger file input click
+                        >
+                            Upload Files
                         </button>
                     </div>
+
                     <button className="logout-button" onClick={handleLogout}>
                         Logout
                     </button>
@@ -246,7 +253,6 @@ function Dashboard() {
                 <button className="go-back-button" onClick={handleGoBack} disabled={pathHistory.length === 0}>
                     Go Back
                 </button>
-                <p className="current-path">Current Path: {currentPath || 'Root'}</p>
             </div>
 
             {/* Content */}

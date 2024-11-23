@@ -1,0 +1,29 @@
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .content-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .menu {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .grid-item {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .content-container {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}

@@ -1,0 +1,10 @@
+/* styles/layout.css */
+
+/* Center the login container on the screen */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+  }
+  

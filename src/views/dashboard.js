@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../styles/dashboard.css';
+import '../assets/css/dashboard/animations.css';
+import '../assets/css/dashboard/layout.css';
+import '../assets/css/dashboard/reset.css';
+import '../assets/css/dashboard/responsive.css';
+import '../assets/css/dashboard/ui-components.css';
+import '../assets/css/dashboard/widgets.css';
 
 function Dashboard() {
     const [folders, setFolders] = useState([]);

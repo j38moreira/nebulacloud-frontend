@@ -1,7 +1,10 @@
-import '../styles/login.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Add this for navigation
+
+import '../assets/css/login/animations.css';
+import '../assets/css/login/layout.css';
+import '../assets/css/login/login-dark.css';
 
 function Login() {
     const [username, setUsername] = useState('');

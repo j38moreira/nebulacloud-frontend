@@ -105,10 +105,10 @@ html, body {
 /* Grid Items (Files and Folders) */
 .grid-item {
     background-color: #3a3a3a;
-    min-height: 150px;
+    min-height: 200px; /* Increased height for folder items */
     border: 1px solid #555;
     border-radius: 8px;
-    padding: 5px;
+    padding: 10px; /* Adjust padding for better spacing */
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
@@ -117,16 +117,10 @@ html, body {
     justify-content: center;
     align-items: center;
     height: auto;
-    max-height: 180px;
+    max-height: 250px; /* Ensure max height is enough for content */
     position: relative;
     overflow: hidden;
 }
-
-.grid-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
-}
-
 .grid-item h4 {
     font-size: 14px;
     margin-top: 10px;
@@ -137,13 +131,48 @@ html, body {
     text-align: center;
 }
 
+.folder-icon {
+    width: 70%; /* Increase width to take up more space */
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 10px; /* Space between icon and folder name */
+    transition: transform 0.3s ease; /* Smooth scaling effect on hover */
+}
+
+.grid-item:hover .folder-icon {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+
+@media (max-width: 768px) {
+    .grid-item.folder {
+        min-height: 220px; /* Ensure folders still have a decent height on smaller screens */
+    }
+
+    .grid-item.folder .folder-icon {
+        width: 60%; /* Adjust the icon size for smaller screens */
+    }
+
+    .grid-item.folder h4 {
+        font-size: 14px; /* Smaller text for smaller devices */
+    }
+}
+.grid-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.grid-item h4 {
+    position: relative;
+}
+
 /* Image or Video preview */
 .file-preview {
-    width: 100%;
-    height: 80px; /* Reduced height for preview */
-    object-fit: contain; /* Make sure images/videos fit within the box */
-    border-radius: 6px;
-    margin-top: 5px; /* Reduced space between preview and text */
+    height: auto;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    transition: transform 0.3s ease, border 0.3s ease;
 }
 
 /* Scrollbar Style */
@@ -211,9 +240,14 @@ html, body {
     background-color: #333;
     border: 1px solid #555;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
     padding: 10px;
     z-index: 1000;
     transition: transform 0.2s ease;
+
+    max-width: calc(100% - 20px);
+    max-height: calc(100% - 20px);
+    overflow: auto;
 }
 
 .context-menu button {
@@ -260,16 +294,75 @@ html, body {
 .image-preview-content {
     position: relative;
     z-index: 100; /* Make sure the image and button are above the overlay */
-    padding: 20px;
-    border-radius: 8px; /* Rounded corners */
+    padding: 10px; /* Reduce padding for larger images */
+    border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    margin: 20px; /* Margin around the modal */
-    max-width: 80%;
-    max-height: 80%;
+    margin: 20px;
+    max-width: 90vw; /* Adjust max width */
+    max-height: 90vh; /* Adjust max height */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: transparent; /* Transparent background */
+    background-color: #1e1e1e; /* Dark background to match theme */
+    overflow: hidden; /* Prevent overflowing */
+}
+
+/* Image Styling with Zoom */
+.image-preview-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: none; /* Remove border */
+    cursor: zoom-in; /* Indicate zoom functionality */
+    transition: transform 0.3s ease-in-out; /* Smooth zoom effect */
+}
+
+/* Zoomed-In State */
+.image-preview-content img.zoomed-in {
+    transform: scale(2); /* Zoom level */
+    cursor: zoom-out; /* Change cursor for zoomed-out functionality */
+}
+
+/* Close Button */
+.close-preview-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 110;
+}
+
+.close-preview-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Fade In Animation for Image Preview */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Zoomed-In State with Initial Position */
+.image-preview-content img.zoomed-in {
+    transform: scale(2); /* Zoom level */
+    cursor: grab; /* Indicate draggable functionality */
+    transition: none; /* Disable smooth transition for panning */
+    will-change: transform; /* Optimize for performance */
+}
+
+/* When Dragging */
+.image-preview-content img.dragging {
+    cursor: grabbing;
 }
 
 /* Close Button - Positioning it at the top right of the screen */

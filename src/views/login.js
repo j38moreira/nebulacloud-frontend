@@ -38,7 +38,7 @@ function Login() {
                         localStorage.setItem('username', username);
 
                         // Redirect to dashboard
-                        navigate('/dashboard'); // This will navigate to the dashboard route
+                        navigate('/dashboard');
                     } else {
                         setErrorMessage('Access token is missing.');
                     }

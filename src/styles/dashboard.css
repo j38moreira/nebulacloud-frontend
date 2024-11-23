@@ -92,87 +92,125 @@ html, body {
     transform: none;
 }
 
-/* Content Grid Layout */
+/* General grid container */
 .content-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 5px;
-    padding: 10px;
-    overflow-y: auto;
-    grid-auto-rows: minmax(0, auto);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Reduced the min-width for grid items */
+    gap: 16px;
+    padding: 20px;
+    margin-top: 20px;
 }
 
-/* Grid Items (Files and Folders) */
+/* Grid item style for both folders and files */
 .grid-item {
-    background-color: #3a3a3a;
-    min-height: 200px; /* Increased height for folder items */
-    border: 1px solid #555;
-    border-radius: 8px;
-    padding: 10px; /* Adjust padding for better spacing */
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: auto;
-    max-height: 250px; /* Ensure max height is enough for content */
-    position: relative;
-    overflow: hidden;
+    justify-content: center;
+    padding: 12px;
+    background-color: #1c1c1c;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #fff;
+    overflow: hidden; /* Prevents overflow when image is enlarged */
 }
+
+/* Hover effect for grid items */
+.grid-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Folder icon and image preview (larger image size without affecting grid size) */
+.folder-icon,
+.file-preview {
+    width: 150px; /* Increase image size */
+    height: 150px; /* Increase image size */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* File icon (for non-image files) */
+.file-placeholder {
+    width: 150px; /* Increase image size */
+    height: 150px; /* Increase image size */
+    object-fit: contain;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease;
+}
+
+/* File name text with truncation */
 .grid-item h4 {
     font-size: 14px;
-    margin-top: 10px;
-    color: #e0e0e0;
-    white-space: nowrap;
+    font-weight: 600;
+    color: #fff;
+    margin-top: 8px;
+    white-space: nowrap; /* Prevent wrapping */
     overflow: hidden;
-    text-overflow: ellipsis; /* Shorten file/folder name */
-    text-align: center;
+    text-overflow: ellipsis; /* Add ellipsis (...) if the text overflows */
+    max-width: 100%; /* Ensure it stays within the container */
 }
 
-.folder-icon {
-    width: 70%; /* Increase width to take up more space */
-    height: auto;
-    object-fit: contain;
-    margin-bottom: 10px; /* Space between icon and folder name */
-    transition: transform 0.3s ease; /* Smooth scaling effect on hover */
+/* Folder icon hover effect */
+.folder-icon:hover,
+.file-preview:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
-.grid-item:hover .folder-icon {
-    transform: scale(1.1); /* Slight zoom effect on hover */
+/* Specific folder and file styles */
+.folder-item {
+    background-color: #333;
 }
 
-
-@media (max-width: 768px) {
-    .grid-item.folder {
-        min-height: 220px; /* Ensure folders still have a decent height on smaller screens */
-    }
-
-    .grid-item.folder .folder-icon {
-        width: 60%; /* Adjust the icon size for smaller screens */
-    }
-
-    .grid-item.folder h4 {
-        font-size: 14px; /* Smaller text for smaller devices */
-    }
-}
-.grid-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.4);
+.file-item {
+    background-color: #444;
 }
 
-.grid-item h4 {
+/* Image preview modal styling */
+.image-preview-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.image-preview-content {
     position: relative;
+    display: inline-block;
 }
 
-/* Image or Video preview */
-.file-preview {
-    height: auto;
-    object-fit: cover;
-    border: 2px solid transparent;
+.image-preview-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.image-preview-content img {
+    max-width: 90vw;
+    max-height: 90vh;
     border-radius: 8px;
-    transition: transform 0.3s ease, border 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+/* Zoomed-in state */
+.zoomed-in {
+    transform: scale(2);
 }
 
 /* Scrollbar Style */
@@ -303,7 +341,6 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #1e1e1e; /* Dark background to match theme */
     overflow: hidden; /* Prevent overflowing */
 }
 
@@ -328,7 +365,7 @@ html, body {
     position: fixed;
     top: 10px;
     right: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color:#333;
     color: white;
     border: none;
     border-radius: 50%;
@@ -364,26 +401,6 @@ html, body {
 .image-preview-content img.dragging {
     cursor: grabbing;
 }
-
-/* Close Button - Positioning it at the top right of the screen */
-.close-preview-btn {
-    position: fixed; /* Position relative to the screen */
-    top: 10px;
-    right: 10px;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px;
-    padding: 5px 10px;
-    cursor: pointer;
-    z-index: 110;
-}
-
-.close-preview-btn:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
 /* Image Styling */
 .image-preview-content img {
     max-width: 100%;

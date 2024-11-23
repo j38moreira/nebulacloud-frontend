@@ -412,15 +412,25 @@ function Dashboard() {
                         key={index}
                         className="grid-item folder-item"
                         onClick={() => handleFolderClick(folder)}
-                        onContextMenu={(e) => handleRightClickFolder(e, folder)} // Add right-click handler for folders
+                        onContextMenu={(e) => handleRightClickFolder(e, folder)}
                     >
-                        <span role="img" aria-label="folder" className="folder-icon">📁</span>
+                        {/* Folder Icon (SVG) */}
+                        <svg
+                            className="folder-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#fff"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-6l-2-2h-4a2 2 0 0 0-2 2z" />
+                        </svg>
                         <h4>{folder}</h4>
                     </div>
                 ))}
 
-
-                {/* Render Files */}
                 {files.map((file, index) => {
                     const isImage = file.match(/\.(jpeg|jpg|png|gif)$/i);
                     const previewUrl = filePreviews[file]; // Fetch preview URL for the image
@@ -430,39 +440,26 @@ function Dashboard() {
                             key={index}
                             className="grid-item file-item"
                             onContextMenu={(e) => handleRightClick(e, file)}
-                            onClick={() => isImage && handleImageClick(file)} // Keep preview functionality on click
+                            onClick={() => isImage && handleImageClick(file)}
                         >
                             {isImage ? (
-                                // Show preview image for image files
                                 <img
-                                    src={previewUrl || 'placeholder-image-url'} // Show preview or placeholder
+                                    src={previewUrl || 'placeholder-image-url'}
                                     alt={file}
                                     className="file-preview"
-                                    style={{
-                                        width: '100px',
-                                        height: '100px',
-                                        objectFit: 'cover',
-                                        borderRadius: '4px',
-                                    }}
                                 />
                             ) : (
-                                // Show generic icon for non-image files
                                 <img
                                     src="path/to/file-placeholder.png"
                                     alt="File"
                                     className="file-placeholder"
-                                    style={{
-                                        width: '100px',
-                                        height: '100px',
-                                        objectFit: 'contain',
-                                        borderRadius: '4px',
-                                    }}
                                 />
                             )}
-                            <h4>{file}</h4>
+                            <h4>{file.length > 15 ? file.slice(0, 15) + '...' : file}</h4> {/* Truncate the file name */}
                         </div>
                     );
                 })}
+
 
             </div>
 

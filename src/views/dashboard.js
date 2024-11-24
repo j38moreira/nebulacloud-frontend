@@ -23,9 +23,9 @@ function Dashboard() {
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         if (storedUsername) {
-            setUsername(storedUsername); // Display username
+            setUsername(storedUsername);
         } else {
-            navigate('/login'); // Redirect if not logged in
+            navigate('/login');
         }
 
         const token = localStorage.getItem('access_token');

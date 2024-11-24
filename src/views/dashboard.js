@@ -8,15 +8,15 @@ function Dashboard() {
     const [files, setFiles] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [currentPath, setCurrentPath] = useState('');
-    const [pathHistory, setPathHistory] = useState([]); // Track navigation history
+    const [pathHistory, setPathHistory] = useState([]);
     const [username, setUsername] = useState('');
     const [newFolderName, setNewFolderName] = useState('');
-    const [showPopup, setShowPopup] = useState(false); // State to control popup visibility
+    const [showPopup, setShowPopup] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [currentFileToDownload, setCurrentFileToDownload] = useState(null);
-    const [previewImage, setPreviewImage] = useState(null); // New state for image preview
-    const [filePreviews, setFilePreviews] = useState({}); // Add here
+    const [previewImage, setPreviewImage] = useState(null);
+    const [filePreviews, setFilePreviews] = useState({});
 
     const navigate = useNavigate();
 
